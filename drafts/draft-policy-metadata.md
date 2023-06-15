@@ -1,24 +1,26 @@
 ---
-tzip: 0xx
+tzip: To be determined
 title: Policy Tokenization
 status: Draft
 author: Carlo van Driesten <carlo.van-driesten@vdl.digital>, Roy Scheeren <roy.scheeren@vdl.digital>, Pierre Mai <pmai@pmsfit.de>
 type: Interface
 created: 2023-06-13
-date: tbd
+date: To be determined
 version: 0.1
 ---
 
+
 ## Abstract
 
-This proposal defines the tokenization of policies written in the Open Digital Rights Language (ODRL) as a Tezos FA2 compliant smart contract to express usage rights and obligations of resources in a trustless environment.
+This proposal defines the tokenization of policies - a process to represent policies as unique digital assets on the blockchain, written in the Open Digital Rights Language (ODRL). ODRL is a language used to express policies for information management and digital rights governance. The proposal describes using a Tezos FA2 compliant smart contract, a type of blockchain contract that meets the FA2 standard for functionality and interoperability on the Tezos blockchain, to express usage rights and obligations of resources in a trustless environment.
 
-It is designed as an extension of the following Tezos Improvement Proposals (TZIPs):
+This proposal is designed as an extension of the following Tezos Improvement Proposals (TZIPs):
 
-1) Defining the usage and constraints on the interfaces of the [TZIP-012][8] FA2 smart contract.
-2) An extension of [TZIP-016][1] describing the metadata schema and standards for tokenized [ODRL][2] compliant policies.
+1. Defining the usage and constraints on the interfaces of the TZIP-012 FA2 smart contract. This is crucial as it ensures that the tokenized policy is compatible with the existing infrastructure.
+2. An extension of TZIP-016 describing the metadata schema and standards for tokenized ODRL compliant policies. This extension is necessary to capture and standardize the metadata associated with each tokenized policy.
 
-In addition we define a process that ensures the minting of a correct ODRL policy token.
+In addition, we define a process that ensures the minting of a correct ODRL policy token, to guarantee the authenticity and correctness of the tokenized policies.
+
 
 ## Table of Contents
 
@@ -27,21 +29,29 @@ In addition we define a process that ensures the minting of a correct ODRL polic
 - [ODRL Information Model](#ODRL-Information-Model)
 - [Tokenization of Policies](#Tokenization-of-Policies)
 - [Specification](#Specification)
-  - [Entrypoint Semantics](#entrypoint-semantics)
-    - [Overview](#Overview)
-    - []
+  - [Overview](#Overview)
+  - [Prerequisites](#Prerequisites)
+    - [Authentication](#Authentication)
+    - [Message Signing](#Message-Signing)
+      - [Failing_noop](#Failing_noop)
+      - [Authenticated Signing Request](#Authenticated-Signing-Request)
+  - [Step 1: Mint](#Step-1-Mint)
+  - [Step 2: Create & Verify the ODRL Policy](#Step-2-Create-amp-Verify-the-ODRL-Policy)
+  - [Step 3: Update](#Step-3-Update)
+  - [Admin Interface](#Admin-Interface)
   - [Metadata](#Metadata)
     - [Token Metadata](#Token-Metadata)
     - [Contract Metadata (TZIP-016)](#Contract-Metadata-TZIP-016)
-  - [FA2.1](#FA21)
+    - [FA2.1](#FA21)
 - [Use Cases](#Use-Cases)
-    - [Digital Art Ownership & Licensing](#Digital-Art-Ownership-amp-Licensing)
-    - [Media Content Distribution](#Media-Content-Distribution)
-    - [Academic Research Licensing](#Academic-Research-Licensing)
-    - [Traditional Organizations and DAOs](#Traditional-Organizations-and-DAOs)
-    - [Game Assets Ownership and Trading](#Game-Assets-Ownership-and-Trading)
+  - [Digital Art Ownership & Licensing](#Digital-Art-Ownership-amp-Licensing)
+  - [Media Content Distribution](#Media-Content-Distribution)
+  - [Academic Research Licensing](#Academic-Research-Licensing)
+  - [Traditional Organizations and DAOs](#Traditional-Organizations-and-DAOs)
+  - [Game Assets Ownership and Trading](#Game-Assets-Ownership-and-Trading)
+- [Implementations](#Implementations)
 - [Future Directions](#Future-Directions)
-- [Copyright](#copyright)
+- [Copyright](#Copyright)
 
 ## General
 
@@ -109,12 +119,12 @@ type action =
  | ["Transfer", FA2_Transfer.Types.transfer];
 ```
 
-### Prerequisites and recommendations
+### Prerequisites
 
 #### Authentication
-Implementation of the application MUST use an authentication service like [SIWT][9] to verify the user has access to the private key belonging to the address he is using and the verifier service can validate the ownership of the respective NFT asset. OPTIONALLY, a signed authentication message can be requested from the user on `Mint` and `Update` steps which REQUIRES optional parameters.
+Implementation of the application MUST use an authentication service like [SIWT][9] to verify the user has access to the private key belonging to the address he is using and the verifier service can validate the ownership of the respective NFT asset. It is RECOMMENDED to use JWT as a method to ensure the secure commuication between frontend and backend.
 
-#### Message signing
+#### Message Signing
 It is REQUIRED to encapsule the `mint_message` and the `update_message` as a [`failing_noop (tag 17)`][24] in order to avoid the use of the signed message for on-chain transactions. This depends widely on the support in libraries and wallets as e.g. requested [here][25]. OPTIONALLY use the `magic_byte: <0x04>` referring to an authenticated signing request according to [tzip-26 proposal][23]:
 
 ##### Failing_noop:
@@ -137,7 +147,7 @@ Defined as:
 - `"length": <00003234>`: Length of the following message in `bytes`.
 - `"message": <6d696e745f6d657373616765>`: The message in `bytes` in this example the string `mint_message`.
 
-##### Authenticated signing request:
+##### Authenticated Signing Request:
 
 ```
 message = magic_bytes + mint_message
@@ -190,7 +200,7 @@ Disadvantages:
 - Extra ledger = added complexity
 - One asset can only have one policy
 
-### Step 2: Create & verify the ODRL policy
+### Step 2: Create & Verify the ODRL Policy
 
 The user will create a ODRL policy e.g. guided through a user interface of a front end. The policy MUST contain the following entries:
 - `"uid": <policy_uid>`: The policy contract address and token id of the policy FA2 contract `policy_contract_address:policy_token_id`.

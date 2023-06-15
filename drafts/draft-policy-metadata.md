@@ -112,7 +112,7 @@ type action =
 ### Prerequisites and recommendations
 
 #### Authentication
-Implementation of the application MAY use an authentication service like [SIWT][9] to verify the user has access to the private key belonging to the address he is using and the verifier service can validate the ownership of the respective NFT asset. OPTIONALLY, a signed authentication message can be requested from the user on `Mint` and `Update` steps which REQUIRE OPTIONAL parameters.
+Implementation of the application MUST use an authentication service like [SIWT][9] to verify the user has access to the private key belonging to the address he is using and the verifier service can validate the ownership of the respective NFT asset. OPTIONALLY, a signed authentication message can be requested from the user on `Mint` and `Update` steps which REQUIRES optional parameters.
 
 #### Message signing
 It is REQUIRED to encapsule the `mint_message` and the `update_message` as a [`failing_noop (tag 17)`][24] in order to avoid the use of the signed message for on-chain transactions. This depends widely on the support in libraries and wallets as e.g. requested [here][25]. OPTIONALLY use the `magic_byte: <0x04>` referring to an authenticated signing request according to [tzip-26 proposal][23]:
@@ -273,7 +273,7 @@ let check_signature =
 ```
 
 ### Admin Interface
-The policy is owned and managed by the administrator of the application. The administrator SHOULD be allowed to update/alter/revoke policies connected to a token as per their discretion. Create a list of allowed associated NFT contracts.
+The policy is owned and managed by the administrator of the application. The administrator SHOULD be allowed to update/alter/revoke policies connected to a token as per their discretion. A list of allowed associated NFT contracts is created on mint.
 
 ### Metadata
 
@@ -307,6 +307,7 @@ A valid ODRL policy token MUST contain the following token meta data values:
 
 
 #### Contract Metadata (TZIP-016)
+The general recommendations of TZIP-16 MUST be followed.
 
 ### FA2.1
 [FA2.1][11] specification provides a usefull extension to the concept by introducing the export of [Tickets][12] in order to maintain the policy directly in a user wallet. In addition the mandatory use of [Events][13] e.g. for updating the token metadata ensures consistent logging of changes to policies made by the contract administrator or any permitted operator. The usage of a FA2.1 compliant contract is RECOMMENDED.

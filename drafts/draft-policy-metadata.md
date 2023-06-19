@@ -249,7 +249,7 @@ OPTIONALLY, developers may choose to use `magic_byte: <0x04>`, which refers to a
 
 ##### Failing_noop:
 
-```json
+```
 {
   branch: "BLockGenesisGenesisGenesisGenesisGenesisf79b5d1CoW2"
   contents: [{

@@ -4,7 +4,7 @@ title: Policy Tokenization
 status: Draft
 author: Carlo van Driesten <carlo.van-driesten@vdl.digital>, Roy Scheeren <roy.scheeren@vdl.digital>, Pierre Mai <pmai@pmsfit.de>
 type: Interface
-created: 2023-06-13
+created: 2023-06-19
 date: To be determined
 version: 0.1
 ---
@@ -18,7 +18,6 @@ This proposal is built as an extension to existing Tezos Improvement Proposals (
 
 1. TZIP-012: Establishing usage constraints and interfaces for the FA2 smart contract. This alignment ensures that the proposed tokenized policy mechanism integrates with the existing infrastructure.
 2. TZIP-016: Describing the metadata schema and standards for tokenized ODRL-compliant policies, thereby standardizing the representation and interpretation of policy metadata.
-3. 
 
 Moreover, this document specifies a methodical procedure for the minting of ODRL policy tokens. This process guarantees the authenticity and correctness of the tokenized policies through a robust verification mechanism. By integrating cryptographic techniques and blockchain's inherent transparency, the proposal ensures that every policy token minted is verifiable and traceable.
 
@@ -110,7 +109,7 @@ Tokens provide an immutable record of the permissions, prohibitions, and obligat
 
 #### Smart Contract Entry Points
 
-The following actions (in pseudo code) MUST be implemented:
+The following actions MUST be implemented:
 
 ```
 type Action =
@@ -132,8 +131,8 @@ The policy token contract MUST contain:
 - a lookup tabel for the prices for policies, named `%pricing_table`. This table SHOULD be of type `(big_map (nat %pricing_id) pair((tez %price)(bool %is_valid))`. The table MUST contain an entry for `%MINT_PRICE`.
 
 The policy token contract MAY contain:
-- a lookup tabel for allowed NFT asset contract addresses, named `%allowed_assets`. This table SHOULD be of type `(big_map (address %asset_contract_address) bool %is_allowed)`.
-- 
+- a lookup tabel for allowed NFT asset contract addresses, named `%allowed_assets`. This table SHOULD be of type `(big_map (address %asset_contract_address) bool %is_valid)`.
+
 ### Prerequisite: Authentication
 
 The instantiation of an application tasked with minting policies MUST employ an authentication Software Development Kit (SDK), such as Sign in with Tezos [(SIWT)][9], to ascertain that the user possesses the necessary access to the private key corresponding to the utilized address.
@@ -150,16 +149,15 @@ Underlying Assumptions:
 
 ### Verifier: Create, Verify & Sign Policies
 
-The user MAY create a ODRL policy e.g. guided through a user interface in a front end application. The `json-ld` policy MUST contain the following entries:
-- `"uid": <policy_contract_address:policy_token_id>`: The address of the policy FA2 contract and unique token id. The `Mint` step allocates the `policy_token_id` and therefore REQUIRES the `policy_contract_address`. The `Update` step additionally REQUIRES the `policy_token_id` in order to contain a fully uniqure `uid`.
+The user MUST create a ODRL policy and MAY be guided through a user interface in a front end application. The `json-ld` policy MUST contain the following entries:
+- `"uid": <policy_contract_address:policy_token_id>`: The address of the policy FA2 contract and unique token id. The `Mint` step allocates the `policy_token_id` and therefore REQUIRES the `policy_contract_address`. The `Update` step additionally REQUIRES the `policy_token_id` in order to contain a fully unique `uid`.
 - `"assignee": <asset_contract_address:asset_token_id>`: The NFT contract address and token id of the target asset NFT to which the policy belongs.
 
 All further entires to construct a valid policy are specified in the [ODRL specification][2].
 
-The user, who makes a call to the verifier, is identified by their Tezos address `tzXXXXXX` of type `address` as a result of the preceding authentication process. The policy is inherently linked to the NFT asset, and the caller of the smart contract is only permitted to update or mint a policy if the ownership status of the asset NFT is validated.
+User, who makes a call to the verifier, are identified by their Tezos address `tzXXXXXX` of type `address` as a result of the preceding authentication process. The policy is inherently linked to the NFT asset, and the caller of the smart contract is only permitted to update or mint a policy if the ownership status of the asset NFT is validated.
 
 The caller MUST provide the following parameters:
-
 - `"policy_message"`: The message of type `PolicyMessage` that will be utilized for the `Mint` and `Update` entry points of the policy FA2 contract.
 
 #### Policy Message
@@ -198,7 +196,6 @@ This is an example for an ODRL file that allows the usage of https://stakenow.fi
        "assignee": "KT1G5v7LfnZKRQhifjhdmusEKcVmupEhZ4F3:0"
    }]
 }
-
 ```
 
 #### Verifier API
@@ -206,16 +203,32 @@ This is an example for an ODRL file that allows the usage of https://stakenow.fi
 The verifier MUST provide the following function:
 
 ```jsligo
-let policy_message_verifier = (policy_message : PolicyMessage) : (bytes * signature) => {
+let policy_message_verifier = (policy_message : PolicyMessage) => {
   // This function should call out to an external service to perform the actual verification & signing
   // For the purpose of this example, we are just returning the input message as bytes
   // and a placeholder signature
+  
+  let signed_policy_message : PolicyMessage = /* construct PolicyMessage here */;
 
   let signed_policy_message = Bytes.pack(policy_message);
-  let signature : signature = "sigXyz123"; // Replace with actual signature
+  let verifier_signature : signature = "sigXyz123"; // Replace with actual signature
 
-  return (signed_policy_message, signature);
+  let policy_params: PolicyParams = {
+     signed_policy_message = signed_policy_message;
+     verifier_signature = verifier_signature;
+   };
+
+  return policy_params;
 }
+```
+
+The return value MUST be of type:
+
+```jsligo
+type PolicyParams = {
+  policy_message : PolicyMessage;
+  verifier_signature : signature;
+};
 ```
 
 The `policy_message_verifier` MUST at least check the following information:
@@ -274,22 +287,15 @@ Defined as:
 
 Considerations:
 - Be aware of replay attacks as described [here][19].
-- OPTIONALLY a magic byte could be reserved specifically for a "Policy signing request" like e.g. `0x9f` [TZIP-26 proposal][23] in order to clarify the underlying message structure.
+- OPTIONALLY a magic byte could be reserved specifically for a "Policy signing request" like e.g. `0x99` [TZIP-26 proposal][23] in order to indicate the underlying message structure of the serialized policy message using `PACK`.
+  > "I got 99 problems but my policy ain't one"
 
 ### Step 1: `Mint`
 
 The minting process reserves a policy token in the contract. This token MUST be used as the `"uid"<policy_contract_address:policy_token_id>` within the ODRL policy. Only the owner of the associated NFT asset is permitted to `Mint` the policy token.
 
-```jsligo
-type PolicyParams = {
-  policy_message : PolicyMessage;
-  verifier_signature : signature;
-};
-
-type Action = {
-  tag : string; // This will always be "Mint" for this type
-  policy_params : PolicyParams;
-};
+```
+type Action = ["Mint" : string, policy_params : PolicyParams]
 ```
 
 A number of actions are RECOMMENDED:
@@ -311,26 +317,20 @@ Disadvantages:
 
 The update process replaces the policy token meta data in the contract. Only the owner of the associated NFT asset is permitted to `Update` the policy token.
 
-```jsligo
-type PolicyParams = {
-  policy_message : PolicyMessage;
-  verifier_signature : signature;
-};
-
-type Action = {
-  tag : string; // This will always be "Update" for this type
-  policy_params : PolicyParams;
-};
+```
+type Action = ["Update" : string, policy_params : PolicyParams]
 ```
 
 In order to maintain the integrity of the `Update` process, a number of checks are REQUIRED:
 
 1) Signature Verification: The ODRL json-ld policy MUST be signed by the `verifier` prior to the update of a policy token. The signature of the `policy_message` MUST be validated using the [check_signature][17] function in LIGO:
+
     ```jsligo
     let check_signature =
-      (pk: key, signed: signature, msg: bytes) =>
-      Crypto.check(pk, signed, msg);
+      (pk: key, verifier_signature : signature, policy_message : bytes) =>
+      Crypto.check(pk, verifier_signature, policy_message);
     ```
+
 3) Timestamp Verification: The timestamp MUST be within a valid range.
 4) Contract Address Verification: The contract address MUST correspond with the `policy_contract_address` specified within the `policy_message`.
 5) Policy ID Verification: The `policy_token_id` MUST exist within the `policy_contract_address` contract. This implies that the token MUST have been reserved using the `Mint` action beforehand.
@@ -344,7 +344,7 @@ The policy associated with a token is under the purview of the application's adm
 The following administrative actions are defined:
 
 ```
-type AdminAction =
+type AdminActions =
  | ["Set_adminstrator": string, admin_uid : address]
  | ["Set_paused": string, is_paused : bool]
  | ["Update_pricing_model": string, price_uid : nat, price : tez, is_valid : bool]
@@ -458,8 +458,6 @@ A reference implementation of a policy contract using the described meta data sc
    ```
    type AdminAction = ["Update_allowed_assets": string, asset_uid : nat, is_valid : bool]
    ```
-
-The adoption of these future directions could significantly enhance the functionality of the policy token system, providing more flexibility and control over policy management and verification.
 
 ## Copyright
 This document is licensed under [MIT][10].

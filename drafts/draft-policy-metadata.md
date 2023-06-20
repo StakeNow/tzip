@@ -12,14 +12,14 @@ version: 0.1
 
 ## Abstract
 
-This proposal defines the tokenization of policies - a process to represent policies as unique digital assets on the blockchain, written in the Open Digital Rights Language (ODRL). ODRL is a language used to express policies for information management and digital rights governance. The proposal extends a Tezos FA2 compliant smart contract for functionality and interoperability on the Tezos blockchain to express usage rights and obligations of resources in a trustless environment.
+This proposal defines the tokenization of policies - a process to represent policies as unique digital assets on the blockchain, written in the Open Digital Rights Language (ODRL). ODRL is a language used to express policies for information management and digital rights governance. The proposal extends a Tezos FA2-compliant smart contract for functionality and interoperability on the Tezos blockchain to express usage rights and obligations of resources in a trustless environment.
 
 This proposal is built as an extension to existing Tezos Improvement Proposals (TZIPs):
 
 1. TZIP-012: Establishing usage constraints and interfaces for the FA2 smart contract. This alignment ensures that the proposed tokenized policy mechanism integrates with the existing infrastructure.
 2. TZIP-016: Describing the metadata schema and standards for tokenized ODRL-compliant policies, thereby standardizing the representation and interpretation of policy metadata.
 
-Moreover, this document specifies a methodical procedure for the minting of ODRL policy tokens. This process guarantees the authenticity and correctness of the tokenized policies through a robust verification mechanism. By integrating cryptographic techniques and blockchain's inherent transparency, the proposal ensures that every policy token minted is verifiable and traceable.
+Moreover, this document specifies a methodical procedure for minting ODRL policy tokens. This process guarantees the authenticity and correctness of the tokenized policies through a robust verification mechanism. By integrating cryptographic techniques and blockchain's inherent transparency, the proposal ensures that every policy token minted is verifiable and traceable.
 
 Potential use cases of this proposal encompass various domains where granular access control and rights management are critical. Examples include digital content distribution, information access control in organizations, and rights management in open data ecosystems. It is expected that the implementation of this proposal will significantly contribute to the robustness, transparency, and flexibility of policy management on the Tezos blockchain.
 
@@ -59,7 +59,7 @@ Potential use cases of this proposal encompass various domains where granular ac
 
 ## General
 
-Many of the terms in this standard are derived from [The Dublin Core, RCF 2413][3].
+Many of the terms in this standard are derived from [The Dublin Core, RFC 2413][3].
 
 The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”,
 “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be
@@ -67,7 +67,7 @@ interpreted as described in [RFC 2119][27].
 
 ## Motivation & Goals
 
-While significant strides have been made towards standardizing the format of Non-Fungible Tokens (NFTs), there's been a conspicuous lack of progress in formalizing the true essence of what a user is purchasing. So far, most rights pertaining to NFTs have been implicit, taken for granted rather than explicitly stated.
+While significant strides have been made toward standardizing the format of Non-Fungible Tokens (NFTs), there's been a conspicuous lack of progress in formalizing the true essence of what a user is purchasing. So far, most rights pertaining to NFTs have been implicit, taken for granted rather than explicitly stated.
 
 > Property rights exist only for (physical) objects and thus not for digital works. Only rights of use can be considered, but these must be granted individually.
 > 
@@ -81,15 +81,15 @@ This proposal seeks to establish a robust framework for defining rights and obli
 
 ## ODRL Information Model
 
-ODRL is a W3C standard recommendation to describe policies that define rights and obligations and is widely used in the industry as e.g. in the [Mobility Data Space][15].
+ODRL is a W3C standard recommendation to describe policies that define rights and obligations and is widely used in the industry, e.g., in the [Mobility Data Space][15].
 
 > The Open Digital Rights Language (ODRL) is a policy expression language that provides a flexible and interoperable information model, vocabulary, and encoding mechanisms for representing statements about the usage of content and services. The ODRL Information Model describes the underlying concepts, entities, and relationships that form the foundational basis for the semantics of the ODRL policies.
 >
-> Policies are used to represent permitted and prohibited actions over a certain asset, as well as the obligations required to be meet by stakeholders. In addition, policies may be limited by constraints (e.g., temporal or spatial constraints) and duties (e.g. payments) may be imposed on permissions.
+> Policies are used to represent permitted and prohibited actions over a particular asset, as well as the obligations required to be met by stakeholders. In addition, policies may be limited by constraints (e.g., temporal or spatial constraints) and duties (e.g., payments) may be imposed on permissions.
 >
 > from [ODRL Information Model 2.2][2]
 
-ODRL implementations are e.g. listed [here][4] and the best practices are collected [here][5] which are recommended to be followed in this specification as well.
+ODRL implementations are, e.g., listed [here][4] and the best practices are collected [here][5] which are recommended to be followed in this specification as well.
 
 ## Tokenization of Policies
 
@@ -128,20 +128,20 @@ type Action =
 
 The policy token contract MUST contain:
 - a reverse lookup table, named `%asset_table`. This table SHOULD be of type `(big_map (pair (address %asset_address, nat %token_id)) (nat %policy_token_id))`.
-- a lookup tabel for the prices for policies, named `%pricing_table`. This table SHOULD be of type `(big_map (nat %pricing_id) pair((tez %price)(bool %is_valid))`. The table MUST contain an entry for `%MINT_PRICE`.
+- a lookup table for the prices for policies, named `%pricing_table`. This table SHOULD be of type `(big_map (nat %pricing_id) pair((tez %price)(bool %is_valid))`. The table MUST contain an entry for `%MINT_PRICE`.
 
-The policy token contract MAY contain:
-- a lookup tabel for allowed NFT asset contract addresses, named `%allowed_assets`. This table SHOULD be of type `(big_map (address %asset_contract_address) bool %is_valid)`.
+It is RECOMMENDED that the policy token contract contains:
+- a lookup table for allowed NFT asset contract addresses, named `%allowed_assets`. This table SHOULD be of type `(big_map (address %asset_contract_address) bool %is_valid)`.
 
 ### Prerequisite: Authentication
 
 The instantiation of an application tasked with minting policies MUST employ an authentication Software Development Kit (SDK), such as Sign in with Tezos [(SIWT)][9], to ascertain that the user possesses the necessary access to the private key corresponding to the utilized address.
 
-In order to ensure secure communication between the frontend and backend components of the application, it is RECOMMENDED that JSON Web Tokens (JWT) be adopted as the preferred method of facilitating this interaction. This recommendation arises from JWT's proven reliability in maintaining information security, offering both confidentiality and integrity during data exchanges.
+To ensure secure communication between the frontend and backend components of the application, it is RECOMMENDED that JSON Web Tokens (JWT) be adopted as the preferred method of facilitating this interaction. This recommendation arises from JWT's proven reliability in maintaining information security, offering confidentiality and integrity during data exchanges.
 
 However, developers SHOULD take note that this document only suggests SIWT and JWT as viable options for authentication and secure communication. The developer MUST ensure that whatever approach chosen aligns with the best practices for maintaining secure and robust communication within the application's architecture.
 
-It is RECOMMENDED to evaluate whether the chosen tools are compliant with the specific privacy and data protection standards required by their jurisdiction or the standards stipulated by their organization. Furthermore, developers should consider the integration with existing systems and the potential need for future scalability when making these decisions.
+It is RECOMMENDED to evaluate whether the chosen tools comply with the specific privacy and data protection standards required by their jurisdiction or the standards stipulated by their organization. Furthermore, developers should consider the integration with existing systems and the potential need for future scalability when making these decisions.
 
 Underlying Assumptions:
 - Requests to the `Verifier` from a user are authenticated using the user's Tezos address.
@@ -149,11 +149,11 @@ Underlying Assumptions:
 
 ### Verifier: Create, Verify & Sign Policies
 
-The user MUST create a ODRL policy and MAY be guided through a user interface in a front end application. The `json-ld` policy MUST contain the following entries:
+The user MUST create a ODRL policy and MAY be guided through a user interface in a front-end application. The `json-ld` policy MUST contain the following entries:
 - `"uid": <policy_contract_address:policy_token_id>`: The address of the policy FA2 contract and unique token id. The `Mint` step allocates the `policy_token_id` and therefore REQUIRES the `policy_contract_address`. The `Update` step additionally REQUIRES the `policy_token_id` in order to contain a fully unique `uid`.
 - `"assignee": <asset_contract_address:asset_token_id>`: The NFT contract address and token id of the target asset NFT to which the policy belongs.
 
-All further entires to construct a valid policy are specified in the [ODRL specification][2].
+All further entries to construct a valid policy are specified in the [ODRL specification][2].
 
 User, who makes a call to the verifier, are identified by their Tezos address `tzXXXXXX` of type `address` as a result of the preceding authentication process. The policy is inherently linked to the NFT asset, and the caller of the smart contract is only permitted to update or mint a policy if the ownership status of the asset NFT is validated.
 
@@ -207,8 +207,6 @@ let policy_message_verifier = (policy_message : PolicyMessage) => {
   // This function should call out to an external service to perform the actual verification & signing
   // For the purpose of this example, we are just returning the input message as bytes
   // and a placeholder signature
-  
-  let signed_policy_message : PolicyMessage = /* construct PolicyMessage here */;
 
   let signed_policy_message = Bytes.pack(policy_message);
   let verifier_signature : signature = "sigXyz123"; // Replace with actual signature
@@ -235,7 +233,7 @@ The `policy_message_verifier` MUST at least check the following information:
 1) Check if the caller of the update action is the owner of the asset NFT.
 2) If the `policy_token_id` is missing then these fields MUST be `"pricing_id" = id of %MINT_PRICE` and `"policy" = ""`.
 
-In addition the function SHOULD check the following information before the `policy_message` can be used as parameter of `Update`:
+In addition, the function SHOULD check the following information before the `policy_message` can be used as parameter of `Update`:
 1) Check if the `policy_token_id` is allocated in the contract `policy_contract_address`.
 2) Check if the `asset_contract_address` and `asset_token_id` is pointing to the `policy_token_id` within the policy `%asset_table`.
 3) Validate the content of the ODRL policy according to the specification given as a template.
@@ -249,7 +247,7 @@ OPTIONALLY, developers may choose to use `magic_byte: <0x04>`, which refers to a
 
 ##### Failing_noop:
 
-```json
+```
 {
   branch: "BLockGenesisGenesisGenesisGenesisGenesisf79b5d1CoW2"
   contents: [{
@@ -261,7 +259,7 @@ OPTIONALLY, developers may choose to use `magic_byte: <0x04>`, which refers to a
 ```
 
 The `failing_noop` operation is defined as follows:
-- `"magic_bytes": <0x03>`: Magic bytes (aka watermark) refering to a `Transfer` operation.
+- `"magic_bytes": <0x03>`: Magic bytes (aka watermark) referring to a `Transfer` operation.
 - `"branch": <8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed8424c7ccd00b>`: Contains the branch (genesis block).
 - `"tag": <11>`: Tag 17 referring to a `failing_noop` operation.
 - `"length": <00003238>`: Length of the following message in `bytes`.
@@ -282,12 +280,12 @@ type my_message = {
 ```
 
 Defined as:
-- `"magic_bytes": <0x04>`: Magic bytes (aka watermark) refering to an `Authenticated signing request`.
+- `"magic_bytes": <0x04>`: Magic bytes (aka watermark) referring to an `Authenticated signing request`.
 - `"message": <706f6c6963795f6d657373616765>`: The serialized `PolicyMessage` in `bytes` using `PACK`. (This example uses the string `"policy_message"`).
 
-Considerations:
-- Be aware of replay attacks as described [here][19].
-- OPTIONALLY a magic byte could be reserved specifically for a "Policy signing request" like e.g. `0x99` [TZIP-26 proposal][23] in order to indicate the underlying message structure of the serialized policy message using `PACK`.
+It is RECOMMENDED to:
+- be aware of replay attacks as described [here][19].
+- to reserve a `magic_byte` specifically for a `"Policy signing request":<0x99>` as change request for the [TZIP-26 proposal][23]. This ensures the correct interpretation of the message structure of the serialized policy message using `PACK`.
   > "I got 99 problems but my policy ain't one"
 
 ### Step 1: `Mint`
@@ -315,13 +313,13 @@ Disadvantages:
 
 ### Step 2: `Update`
 
-The update process replaces the policy token meta data in the contract. Only the owner of the associated NFT asset is permitted to `Update` the policy token.
+The update process replaces the policy token metadata in the contract. Only the owner of the associated NFT asset is permitted to `Update` the policy token.
 
 ```
 type Action = ["Update" : string, policy_params : PolicyParams]
 ```
 
-In order to maintain the integrity of the `Update` process, a number of checks are REQUIRED:
+To maintain the integrity of the `Update` process, a number of checks are REQUIRED:
 
 1) Signature Verification: The ODRL json-ld policy MUST be signed by the `verifier` prior to the update of a policy token. The signature of the `policy_message` MUST be validated using the [check_signature][17] function in LIGO:
 
@@ -366,11 +364,11 @@ Token-specific metadata is stored/presented as a Michelson value of type `(map s
 
 Providing a value for `"decimals"` is required for all token types. `"name”` and `"symbol"` are not required but it is highly recommended for most tokens to provide the values either in the map or the JSON found via the TZIP-016 URI.
 
-A valid ODRL policy token MUST contain the following token meta data values:
+A valid ODRL policy token MUST contain the following token metadata values:
 - `"policy"`: The ODRL [json-ld][16] policy.
 - `"signature"`: A signature of [type][20] serialized with [`PACK`][22].
 
-**Additional metadata properties MAY be added to the policy token meta data** to support further authenticity, and integrity purposes from external vocabularies. The ODRL Information Model recommends the use of Dublin Core Metadata Terms [dcterms][21] for ODRL policies.
+**Additional metadata properties MAY be added to the policy token metadata** to support further authenticity, and integrity purposes from external vocabularies. The ODRL Information Model recommends the use of Dublin Core Metadata Terms [dcterms][21] for ODRL policies.
 
 **The following Dublin Core Metadata Terms [dcterms][21] properties SHOULD be used:**
 
@@ -439,7 +437,7 @@ Those are example use cases in order to understand the mechanism.
 **Benefits/Outcomes:** In-game assets can be tokenized and associated with an ODRL policy defining the rights of the asset's owner. This setup facilitates a player-driven economy, enabling players to trade, sell, or rent their game assets securely.
 
 ## Implementations
-A reference implementation of a policy contract using the described meta data schema in combination with a [FA2][8] contract is implemented in the library [Sign in with Tezos][9].
+A reference implementation of a policy contract using the described metadata schema in combination with a [FA2][8] contract is implemented in the library [Sign in with Tezos][9].
 
 ## Future Directions
 
@@ -452,7 +450,7 @@ A reference implementation of a policy contract using the described meta data sc
 3) `View Definitions`: Defining views to access a policy and its verification status, as well as to access the list of verifiers and their respective statuses, would improve the transparency and accessibility of policy information.
 4) `Policy URI in Policy Token Metadata`: It is worth considering the addition of a `policy_uri` to the policy token metadata. This URI, which would comply with [TZIP-16][1], would point to the policy represented json-ld e.g. on IPFS.
 5) `Conceptualize Policy Evolution`: It is important to consider how policies might evolve or change over time. Developing a concept for how policy updates, revocations, and additions could be managed while maintaining the integrity of the policy token and the associated NFT asset, could provide a valuable solution to the dynamic nature of policy management.
-6) `Multiple Assets to one Policy`: It may be considered to allow multiple pairs of `asset_contract_address:asset_token_id` to point to a sinlge policy.
+6) `Multiple Assets to one Policy`: It may be considered to allow multiple pairs of `asset_contract_address:asset_token_id` to point to a single policy.
 7) `Update allowed NFT asset contract addresses`: Add an entry point to update the `%allowed_assets` analogously to updating  `%pricing_table`:
 
    ```

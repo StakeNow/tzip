@@ -7,7 +7,7 @@ type: LA
 created: 2022-09-20
 date: 2024-02-21
 requires: TZIP-10
-version: 0.1
+version: 1
 ---
 
 
@@ -73,13 +73,18 @@ In order to reserve a new byte the completion of the following workflow is REQUI
 - A Merge Request to this TZIP MUST:
   - Reserve a magic byte by modifying the `table of reserved bytes`
   - Add the specification URI including a URI fragment
+  - Increment the major version number of this TZIP
 - It is RECOMMENDED to publish the request to gather community feedback
 - When the MR is merged, the byte is reserved
 
+## Backwards compatibility
+
+The `table of reserved bytes` is only allowed to be extended and previously used magic bytes MUST NOT be reused as it breaks backwards compatibility.
+
 ## References
-[beacon-sdk][] - A software develop kit to communicate between wallets and dapps.
-[SCORUs][] - Start building with SCORUs on Mondaynet.
-[Zk-rollups][] - Zero Knowledge Rollups.
+- [beacon-sdk][] - A software develop kit to communicate between wallets and dapps.
+- [SCORUs][] - Start building with SCORUs on Mondaynet.
+- [Zk-rollups][] - Zero Knowledge Rollups.
 
 [beacon-sdk]: https://docs.walletbeacon.io/guides/sign-payload
 [TZIP-10]: https://gitlab.com/tezos/tzip/-/blob/06024a22384139b328a63747cb7951c81e5b9cd7/proposals/tzip-10/tzip-10.md

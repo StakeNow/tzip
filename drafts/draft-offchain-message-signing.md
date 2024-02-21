@@ -30,7 +30,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 | Character encoding | Integer |
 | Message | Bytes |
 
-#### Magic prefix
+#### Magic byte
 
 ```text
 b"\x80tezos signed offchain message"
@@ -39,20 +39,28 @@ b"\x80tezos signed offchain message"
 First byte is the magic byte used for domain separation within the Tezos domain. 0x80 was chosen to put it on the upper half of the range and far away from protocol specify magic bytes. The remaining part is to protect against cross-chain signature replay attacks (not all wallets have this protection from bip44/slip10). Chosen to be "long enough" and to be descriptive. Any user-agents performing or verifying signatures of messages with first byte 0x80, **MUST** comply with this standard.
 
 #### Interfaces
-The Interfaces act as a domain separator to tell a wallet or SDK developer how to distinguish different off-chain message types. This also includes the Version of the current TZIP. String **MUST** be encoded with the printable ASCII character set and can not be an empty string. This field **MAY** be displayed to the user.
+
+The Interfaces act as a domain separator to tell a wallet or SDK developer how to distinguish different off-chain message types. This also includes the version of the current TZIP. The String **MUST** be encoded with the printable ASCII character set and can not be an empty string. This field **MAY** be displayed to the user.
+The first uri MUST contain a reference to this TZIP including its current version number in the uri fragment. OPTIONALLY multiple interfaces can be added to tell the wallet what type of message is to be expected in the `Message` string.
+
+Example "OFF-CHAIN-MESSAGE-SIGNING-URI#1","SIWT-URI#2"
 
 #### Message
-The message content that the user is requested to sign. **MUST** be displayed to the user.
+
+The message content that the user is requested to sign. **MUST** be displayed to the user. If no further interface is defined then the message is displayed according to its encoding.
 
 ## Validation
+
 Wallet **MUST** enforce strict validation to ensure there is no deviation in any way from the expected data format.
 
 ## Interface
+
 * Wallet implementers MUST display the public key hash associated to the private key used for signing the message.
 * Wallet implementers displaying the message as plaintext to the user SHOULD require the user to scroll to the bottom of the text area prior to signing.
 
 ## Replay protection
-Replay protection is out of scope for this tzip. Implementers **MUST** take necessary security precautions to include for example timestamp, dApp url, chainId, nounce etc. in the message or in the domain_seperator, as neccessary for their specific usecase.
+
+Replay protection is out of scope for this TZIP. Implementers **MUST** define an interface specification protecting from replay attacks if relevant to the application. CAIP-122 includes suitable measures like e.g. the use of a nonce inside the message data structure.
 
 ## Encoding
 
@@ -66,6 +74,7 @@ Replay protection is out of scope for this tzip. Implementers **MUST** take nece
 | message | Variable | bytes |
 
 #### Character encoding
+
 | Id | Encoding | Hardware Wallet Support |
 | -------- | -------- | -------- |
 | 0 | None | - |

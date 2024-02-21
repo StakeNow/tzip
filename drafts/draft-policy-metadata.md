@@ -1,5 +1,5 @@
 ---
-tzip: To be determined
+tzip: 29
 title: Policy Tokenization
 status: Draft
 author: Carlo van Driesten <carlo.van-driesten@vdl.digital>, Roy Scheeren <roy.scheeren@vdl.digital>, Pierre Mai <pmai@pmsfit.de>

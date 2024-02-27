@@ -1,12 +1,12 @@
 ---
-tzip: 29
+tzip: tbd
 title: Policy Tokenization
 status: Draft
 author: Carlo van Driesten <carlo.van-driesten@vdl.digital>, Roy Scheeren <roy.scheeren@vdl.digital>, Pierre Mai <pmai@pmsfit.de>
-type: Interface
+type: I
 created: 2023-06-19
 date: To be determined
-version: 0.1
+requires: ["draf-offchain-message-signing"]
 ---
 
 

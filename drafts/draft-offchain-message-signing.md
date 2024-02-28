@@ -11,7 +11,7 @@ requires: ["draft-signer-requests"]
 
 ## Abstract
 
-There is no formal message signing standard for Tezos yet. Message signing has many use cases. It can for example be used for code signing, so that authenticity and integrity can be validated. Right now decentralized applications (dApps) and wallets are relying on an informal way of doing message signing by using Micheline expressions, something it was never intended for. In addition the [failing_noop (tag 17)][] was not adopted for the use of off-chain messages due to the lack of documentation. This TZIP aims to solve that problem and define a standard that is simple, secure, future-proof and compatible with hardware wallets.
+There is no formal message signing standard for Tezos yet. Message signing has many use cases. It can for example be used for code signing, so that authenticity and integrity can be validated. Right now decentralized applications (dApps) and wallets are relying on an informal way of doing message signing by using Michelson data (magic byte `0x05`), something it was never intended for. In addition the [failing_noop (tag 17)][] was not adopted for the use of off-chain messages due to the lack of documentation. This TZIP aims to solve that problem and defines a standard that is simple, secure, future-proof and compatible with hardware wallets.
 
 ## General
 
@@ -25,35 +25,41 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 | Name               | Type     |
 | -------------------|----------|
-| Magic byte         | String   |
+| Magic string       | String   |
 | Interface          | String   |
 | Character encoding | Integer  |
 | Message            | Bytes    |
 
-#### Magic byte
+#### Magic string
 
 ```text
 b"\x80tezos signed offchain message"
 ```
 
-The first byte is the magic byte used for domain separation within the Tezos ecosystem. `0x80` was chosen and is registered in the [draft-signer-requests][] TZIP. The remaining part is to protect against cross-chain signature replay attacks (not all wallets have this protection from [bip44/slip10][]). Chosen to be "long enough" and to be descriptive. Any user-agents performing or verifying signatures of messages with first byte 0x80, MUST comply with this standard.
+The first byte is the `magic byte` used for domain separation within the Tezos ecosystem. `0x80` was chosen and is registered in the [draft-signer-requests][] TZIP. The remaining part is to protect against cross-chain signature replay attacks (not all wallets have this protection from [bip44/slip10][]). It is chosen to be "long enough" and descriptive in order to make it very unlikely to have a meaning outside the context of the Tezos off-chain message signing. Any user-agents performing or verifying signatures of messages with the first byte `0x80` MUST comply with this standard.
 
 #### Interface
 
-The `interface` acts as a domain separator to tell a wallet or SDK developer how to distinguish different off-chain message types. The String MUST be encoded with the printable ASCII character set. This field MAY be displayed to the user. The interface MUST contain a reference to the specification defining the `message` encoding as [URI][] and add the specifications `namespace` as uri fragment.
+The `interface` acts as a domain separator to tell a wallet or SDK developer how to distinguish different off-chain message types. The string MUST be encoded with the printable ASCII character set. This field MAY be displayed to the user. The interface MUST contain a reference to the specification defining the `message`. It is a [URI][] and RECOMMENDED yto be suffixed with the specifications `namespace` as uri fragment or OPTIONALLY with the name and number of the specification like e.g. `#TZIP-XY`.
+It is RECOMMENDED to host the specifications in order to facilitate easily human readable URIs as it is done for the Chain Agnostic Improvement Proposals (CAIPs). Tezos Improvement Proposals MAY use the following abbreviation `tzip://` as prefix with the TZIP number as suffix whereas it is REQUIRED to maintain the TZIP specification at `https://gitlab.com/tezos/tzip`. The `interface` string MUST NOT be empty.
 
-Example: `https://gitlab.com/tezos/tzip/-/blob/proposals/tzip-XY/tzip-XY.md#OFFCHAIN-MESSAGE-SIGNING`
+```text
+Examples:
+https://gitlab.com/tezos/tzip/-/blob/proposals/tzip-XY/tzip-XY.md#OFFCHAIN-MESSAGE-SIGNING
+https://chainagnostic.org/CAIPs/caip-122#CAIP-122
+https://chainagnostic.org/CAIPs/caip-122#SIGN-IN-WITH-X
+tzip://78
+```
 
 #### Character encoding
 
-There are different kinds of encodings available for a `message`. If encoding `Other` is used then the `Interface` specification MUST include the type of encoding. In certain applications e.g. a [PACK encoding][] might be useful but this TZIP does only provide the basic options as application use cases are not foreseeable.
+There are different kinds of encodings available for a `message`. If encoding `Custom` is used then the `Interface` specification MUST include the type of encoding. In certain applications e.g. a [PACK encoding][] might be useful but this TZIP does only provide the basic options as application use cases are not foreseeable. If the encoding `Custom` is not supported then the dApp or wallet MUST display it as `hex string`.
 
 | Id       | Encoding        | Hardware Wallet Support |
 | ---------|-----------------|-------------------------|
-| 0        | None            | -                       |
-| 1        | Other           | -                       |
-| 2        | Printable ASCII | Yes                     |
-| 3        | UTF-8           | No                      |
+| 0        | Printable ASCII | Yes                     |
+| 1        | UTF-8           | No                      |
+| 2        | Custom          | -                       |
 
 #### Message
 
@@ -65,12 +71,16 @@ Replay protection is out of scope for this TZIP. Implementers MUST define an int
 
 | Name                  | Size     | Contents                |
 |-----------------------|----------|-------------------------|
-| magic_byte            | 30 bytes | bytes                   |
+| magic_string          | 30 bytes | bytes                   |
 | # Bytes in next field | 1 byte   | unsigned 8-bit integer  |
 | interface             | variable | bytes                   |
 | character_encoding    | 1 byte   | unsigned 8-bit integer  |
 | # Bytes in next field | 2 bytes  | unsigned 16-bit integer |
 | message               | Variable | bytes                   |
+
+## Backwards compatibility
+
+A dApp or wallet provider MUST fall back to the default `interface: tzip://tbd` if it does not support the provided interface specification and display the message including a warning.
 
 ## Validation
 
@@ -116,4 +126,4 @@ signature = edsigu6UNY8NP7eXEyGbszvugiDWxZiRbk18Qdvt78eQMZxo2oSXHf1bmWT5Xrdvq7e8
 
 ## Copyright
 
-This document is licensed under [MIT][https://spdx.org/licenses/MIT.html].
+This document is licensed under [MIT](https://spdx.org/licenses/MIT.html).

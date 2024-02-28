@@ -108,4 +108,4 @@ The `table of reserved bytes` is only allowed to be extended. Previously used ma
 
 ## Copyright
 
-This document is licensed under [MIT][https://spdx.org/licenses/MIT.html].
+This document is licensed under [MIT](https://spdx.org/licenses/MIT.html).

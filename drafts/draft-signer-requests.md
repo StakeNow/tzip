@@ -28,7 +28,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 Currently the definition of **magic bytes** is maintained by Octez in the context of the [octez-signer magic bytes][].
 
-Wallets based on the [beacon-sdk][] implementation of [TZIP-10][] are using `0x03` and `0x05` in order to type payloads. Most wallet only accept to sign those two kinds of payloads. Currently only [AirGap Wallet][] accepts to sign raw data.
+Wallets based on the [beacon-sdk][] implementation of [TZIP-10][] are using `0x03` and `0x05` in order to type payloads. Most wallets only accept to sign those two kinds of payloads. Currently only [AirGap Wallet][] accepts to sign raw data.
 
 Incoming Layer 2 applications like [Smart Rollups][] or [Zk Rollups][] need to be able to reserve a byte in order to integrate into the tooling ecosystem. In addition, certain applications like the secure [Off-Chain Message Signing][] need a magic byte to signal its purpose to a wallet application e.g. to facilitate the signing of a [CAIP-122][] compliant sign-in message as implemented in the [Sign In With Tezos (SIWT)][] library.
 
@@ -52,7 +52,7 @@ Remote signer applications MUST handle signing requests with the following forma
 
    `https://gitlab.com/tezos/tzip/-/blob/57c32be0e5d4bc6867cea83a12cf909894c42c41/proposals/tzip-10/tzip-10.md#TZIP-10`
 - **Magic byte**: Currently and previously reserved magic bytes.
-- **Status**: Indicates if a magic byte associated with a message type is actively used `approved` or deprecated `revoked`.
+- **Status**: Indicates if a magic byte associated with a message type is actively used `approved` or deprecated `revoked`. The range of magic bytes reserved for the Tezos protocol has no status as it is governed by the Tezos governance.
 
 | Message type                  | Reference                    | Magic byte | Status     |
 |-------------------------------|------------------------------|------------|------------|
@@ -83,7 +83,7 @@ In order to reserve a new byte the completion of the following workflow is REQUI
 
 ## Backwards compatibility
 
-The `table of reserved bytes` is only allowed to be extended. Previously used magic bytes MUST NOT be reused as it breaks backwards compatibility. If a message type is not used anymore it SHALL be marked with the Status `revoked`. The range reserved by the protocol MAY have breaking changes due to protocol upgrades governed by the Tezos community. Changes SHALL be documented in this TZIP as soon as possible.
+The `table of reserved bytes` is only allowed to be extended. Previously used magic bytes MUST NOT be reused as it breaks backwards compatibility. If a message type is not used anymore it SHALL be marked with the Status `revoked`. The range reserved by the protocol MAY have breaking changes due to protocol upgrades governed by the Tezos community. Changes SHALL be documented in this TZIP as soon as possible. Normally a version number in the TZIP is only used for drafts. As this TZIP is designed to evolve the version SHALL be used to indicate an extension of the `table of reserved bytes`.
 
 ## References
 - [octez-signer magic bytes][] - The list of currently maintained magic bytes by Octez.

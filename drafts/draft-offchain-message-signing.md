@@ -6,7 +6,6 @@ author: Klas Harrysson <klas@kukai.app>, Carlo van Driesten <carlo.van-driesten@
 type: I
 created: 2024-02-21
 date: To be determined
-requires: ["draft-signer-requests"]
 ---
 
 ## Abstract

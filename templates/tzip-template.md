@@ -22,26 +22,19 @@ Provide a simplified and layman-accessible explanation of the TZIP.
 
 ## Abstract
 
-A short (200-500 word) but comprehensive description of the issue being
-addressed and the proposed solution.
+A short (200-500 word) but comprehensive description of the issue being addressed and the proposed solution.
 
 ## Motivation
 
-It should clearly explain why the existing implementation is inadequate to
-address the problem that the TZIP solves.
+It should clearly explain why the existing implementation is inadequate to address the problem that the TZIP solves.
 
 ## Specification
 
-The technical specification should describe the syntax and semantics of any new
-feature.
+The technical specification should describe the syntax and semantics of any new feature.
 
 ## Rationale
 
-The rationale fleshes out the specification by describing what motivated the
-design and why particular design decisions were made. It should describe
-alternate designs that were considered and related work. The rationale may also 
-provide evidence of consensus within the community, and should discuss important 
-objections or concerns raised during discussion.
+The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.
 
 ## Backwards Compatibility
 
@@ -52,7 +45,7 @@ solutions.
 ## Security Considerations
 
 This section of the document should explain any security relevant features
-of the proposal, or any critical issues for implemenenters. 
+of the proposal, or any critical issues for implementers.
 
 ## Test Cases
 
@@ -70,8 +63,7 @@ A list of references relevant to the proposal.
 ## Copyright
 
 All TZIPs must be in the public domain, or a under a permissive license
-substantially identical to placement in the public domain. 
-
+substantially identical to placement in the public domain.
 
 Example of a copyright waiver:
 

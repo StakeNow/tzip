@@ -114,7 +114,7 @@ signature = edsigtvazvxVHsofbakqvqHtQGiYZBxNg8hfY45escmFpLTYeBjjBFUTt254UARm93qH
 ## References
 
 * [failing_noop (tag 17)][] - A possible solution to encode a signed message for off-chain usage.
-* [PACK encoding][] - An encoding used in LIGO.
+* [PACK encoding][] - A Michelson instruction for encoding and decoding.
 
 [RFC 2119]: https://www.ietf.org/rfc/rfc2119.txt
 [failing_noop (tag 17)]: http://doc.tzalpha.net/shell/p2p_api.html#failing-noop-tag-17

@@ -3,9 +3,9 @@ tzip: tbd
 title: Policy Tokenization
 status: Draft
 author: Carlo van Driesten <carlo.van-driesten@vdl.digital>, Roy Scheeren <roy.scheeren@vdl.digital>, Pierre Mai <pmai@pmsfit.de>
-type: I
+type: LA
 created: 2023-06-19
-date: To be determined
+date: 2024-02-29
 requires: ["draf-offchain-message-signing"]
 ---
 
@@ -25,37 +25,37 @@ Potential use cases of this proposal encompass various domains where granular ac
 
 ## Table of Contents
 
-- [General](#General)
+- [General](##General)
 - [Motivation & Goals](#Motivation-amp-Goals)
-- [ODRL Information Model](#ODRL-Information-Model)
-- [Tokenization of Policies](#Tokenization-of-Policies)
-- [Specification](#Specification)
-  - [Overview](#Overview)
-    - [Smart Contract Entry Points](#Smart-Contract-Entry-Points)
-    - [Contract Storage](#Contract-Storage)
-  - [Prerequisite: Authentication](#Prerequisite-Authentication)
+- [ODRL Information Model](#odrl-information-model)
+- [Tokenization of Policies](#tokenization-of-policies)
+- [Specification](#specification)
+  - [Overview](#overview)
+    - [Smart Contract Entry Points](#smart-contract-entry-points)
+    - [Contract Storage](#contract-storage)
+  - [Prerequisite: Authentication](#prerequisite-authentication)
   - [Verifier: Create, Verify & Sign Policies](#Verifier-Create-Verify-amp-Sign-Policies)
-    - [Policy Message](#Policy-Message)
-    - [Verifier API](#Verifier-API)
-    - [Message Signing](#Message-Signing)
-      - [Failing_noop](#Failing_noop)
-      - [Authenticated Signing Request](#Authenticated-Signing-Request)
-  - [Step 1: Mint](#Step-1-Mint)
-  - [Step 2: Update](#Step-2-Update)
-  - [Administrative Interface](#Administrative-Interface)
-  - [Metadata](#Metadata)
-    - [Token Metadata](#Token-Metadata)
-    - [Contract Metadata (TZIP-016)](#Contract-Metadata-TZIP-016)
-  - [FA2.1](#FA21)
-- [Use Cases](#Use-Cases)
+    - [Policy Message](#policy-message)
+    - [Verifier API](#verifier-api)
+    - [Message Signing](#message-signing)
+      - [Failing_noop](#failing_noop)
+      - [Authenticated Signing Request](#authenticated-signing-request)
+  - [Step 1: Mint](#step-1-mint)
+  - [Step 2: Update](#step-2-update)
+  - [Administrative Interface](#administrative-interface)
+  - [Metadata](#metadata)
+    - [Token Metadata](#token-metadata)
+    - [Contract Metadata (TZIP-016)](#contract-metadata-tzip-016)
+  - [FA2.1](#fa21)
+- [Use Cases](#use-cases)
   - [Digital Art Ownership & Licensing](#Digital-Art-Ownership-amp-Licensing)
-  - [Media Content Distribution](#Media-Content-Distribution)
-  - [Academic Research Licensing](#Academic-Research-Licensing)
-  - [Traditional Organizations and DAOs](#Traditional-Organizations-and-DAOs)
-  - [Game Assets Ownership and Trading](#Game-Assets-Ownership-and-Trading)
-- [Implementations](#Implementations)
-- [Future Directions](#Future-Directions)
-- [Copyright](#Copyright)
+  - [Media Content Distribution](#media-content-distribution)
+  - [Academic Research Licensing](#academic-research-licensing)
+  - [Traditional Organizations and DAOs](#traditional-organizations-and-daos)
+  - [Game Assets Ownership and Trading](#game-assets-ownership-and-trading)
+- [Implementations](#implementations)
+- [Future Directions](#future-directions)
+- [Copyright](#copyright)
 
 ## General
 
@@ -70,9 +70,9 @@ interpreted as described in [RFC 2119][27].
 While significant strides have been made toward standardizing the format of Non-Fungible Tokens (NFTs), there's been a conspicuous lack of progress in formalizing the true essence of what a user is purchasing. So far, most rights pertaining to NFTs have been implicit, taken for granted rather than explicitly stated.
 
 > Property rights exist only for (physical) objects and thus not for digital works. Only rights of use can be considered, but these must be granted individually.
-> 
+>
 > The most similar to ownership are "exclusive as well as temporally, spatially and content-wise unrestricted, transferable, sublicensable and rentable rights of use″. These could be supplemented by editing rights or various types of use, such as the right to print on paper.
-> 
+>
 > *translated from [CMS Deutschland Blog][14]*
 
 Generally speaking, any form of digital art or data can be tokenized, for instance, as an NFT, effectively serving as a digital counterpart or "twin". However, the digital rights associated with these assets must be independently defined. Given the sheer breadth of use cases for these digital assets, there are bound to be circumstances where a transparent, tamper-proof policy, complete with its history, will be advantageous.
@@ -95,13 +95,13 @@ ODRL implementations are, e.g., listed [here][4] and the best practices are coll
 
 Tokens provide an immutable record of the permissions, prohibitions, and obligations dictated by the tokenized ODRL policy. This record can be referenced by the application to enforce access controls.
 
-* **Role of Tokens:** Each token can be seen as a 'license' carrying the access policy (ODRL policy) for a particular resource, codified within it as a smart contract. The access policy specifies the permissions, obligations, and prohibitions associated with that digital asset.
+- **Role of Tokens:** Each token can be seen as a 'license' carrying the access policy (ODRL policy) for a particular resource, codified within it as a smart contract. The access policy specifies the permissions, obligations, and prohibitions associated with that digital asset.
 
-* **Enforcing Access:** The actual enforcement of access control takes place in the application layer, not at the token level. When a user tries to interact with a resource through the application, the application refers to the token's policy (on-chain data) to ascertain the user's permissions regarding that resource.
+- **Enforcing Access:** The actual enforcement of access control takes place in the application layer, not at the token level. When a user tries to interact with a resource through the application, the application refers to the token's policy (on-chain data) to ascertain the user's permissions regarding that resource.
 
-* **Decentralized Documentation:** Each token serves as a decentralized, immutable proof of the policy. If a dispute arises, the token's smart contract can provide irrefutable evidence of the conditions set forth at the time of the user's interaction with the resource.
+- **Decentralized Documentation:** Each token serves as a decentralized, immutable proof of the policy. If a dispute arises, the token's smart contract can provide irrefutable evidence of the conditions set forth at the time of the user's interaction with the resource.
 
-* **Claim State:** The immutability and transparency of the blockchain provide a solid ground for users to state a claim if they feel their access rights, as detailed in the token, have been violated.
+- **Claim State:** The immutability and transparency of the blockchain provide a solid ground for users to state a claim if they feel their access rights, as detailed in the token, have been violated.
 
 ## Specification
 
@@ -111,12 +111,12 @@ Tokens provide an immutable record of the permissions, prohibitions, and obligat
 
 The following actions MUST be implemented:
 
-```
+```jsligo
 type Action =
- | ["Mint": string, policy_params : PolicyParams]
- | ["Update": string, policy_params : PolicyParams]
  | ["Set_adminstrator": string, admin_uid : address]
  | ["Set_paused": string, is_paused : bool]
+ | ["Mint": string, policy_params : PolicyParams]
+ | ["Update": string, policy_params : PolicyParams]
  | ["Update_pricing_model": string, price_uid : nat, price : tez, is_valid : bool]
  | ["Payout": string, amount : tez]
  | ["Update_operators": string, update : FA2_UpdateOperators.Types.update_operators]
@@ -127,10 +127,12 @@ type Action =
 #### Contract Storage
 
 The policy token contract MUST contain:
+
 - a reverse lookup table, named `%asset_table`. This table SHOULD be of type `(big_map (pair (address %asset_address, nat %token_id)) (nat %policy_token_id))`.
 - a lookup table for the prices for policies, named `%pricing_table`. This table SHOULD be of type `(big_map (nat %pricing_id) pair((tez %price)(bool %is_valid))`. The table MUST contain an entry for `%MINT_PRICE`.
 
 It is RECOMMENDED that the policy token contract contains:
+
 - a lookup table for allowed NFT asset contract addresses, named `%allowed_assets`. This table SHOULD be of type `(big_map (address %asset_contract_address) bool %is_valid)`.
 
 ### Prerequisite: Authentication
@@ -144,12 +146,14 @@ However, developers SHOULD take note that this document only suggests SIWT and J
 It is RECOMMENDED to evaluate whether the chosen tools comply with the specific privacy and data protection standards required by their jurisdiction or the standards stipulated by their organization. Furthermore, developers should consider the integration with existing systems and the potential need for future scalability when making these decisions.
 
 Underlying Assumptions:
+
 - Requests to the `Verifier` from a user are authenticated using the user's Tezos address.
 - There is no requirement for individual message requests to be signed by the user for the purposes of authenticating their origin.
 
 ### Verifier: Create, Verify & Sign Policies
 
 The user MUST create a ODRL policy and MAY be guided through a user interface in a front-end application. The `json-ld` policy MUST contain the following entries:
+
 - `"uid": <policy_contract_address:policy_token_id>`: The address of the policy FA2 contract and unique token id. The `Mint` step allocates the `policy_token_id` and therefore REQUIRES the `policy_contract_address`. The `Update` step additionally REQUIRES the `policy_token_id` in order to contain a fully unique `uid`.
 - `"assignee": <asset_contract_address:asset_token_id>`: The NFT contract address and token id of the target asset NFT to which the policy belongs.
 
@@ -158,6 +162,7 @@ All further entries to construct a valid policy are specified in the [ODRL speci
 User, who makes a call to the verifier, are identified by their Tezos address `tzXXXXXX` of type `address` as a result of the preceding authentication process. The policy is inherently linked to the NFT asset, and the caller of the smart contract is only permitted to update or mint a policy if the ownership status of the asset NFT is validated.
 
 The caller MUST provide the following parameters:
+
 - `"policy_message"`: The message of type `PolicyMessage` that will be utilized for the `Mint` and `Update` entry points of the policy FA2 contract.
 
 #### Policy Message
@@ -174,6 +179,7 @@ type UpdateMessage = {
 ```
 
 Defined as:
+
 - `"timestamp"`: Contains the time this message was created of type `timestamp`.
 - `"policy_contract_address"`: Target policy contract `ktXXXXXX` of type `address`.
 - `"asset_contract_address"`: Respective NFT asset contract `ktXXXXXX` of type `address`.
@@ -181,9 +187,9 @@ Defined as:
 - `"pricing_id"`: id of the `%pricing_table` in the policy contract of type `nat`.
 - `"policy"`: The ODRL [json-ld][16] policy.
 
-This is an example for an ODRL file that allows the usage of https://stakenow.fi under the condition to be the owner of the [StakeNow Beta User NFT][26]:
+This is an example for an ODRL file that allows the usage of <https://stakenow.fi> under the condition to be the owner of the [StakeNow Beta User NFT][26]:
 
-```
+```json
 {
    "@context": "http://www.w3.org/ns/odrl.jsonld",
    "@type": "Policy",
@@ -230,10 +236,12 @@ type PolicyParams = {
 ```
 
 The `policy_message_verifier` MUST at least check the following information:
+
 1) Check if the caller of the update action is the owner of the asset NFT.
 2) If the `policy_token_id` is missing then these fields MUST be `"pricing_id" = id of %MINT_PRICE` and `"policy" = ""`.
 
 In addition, the function SHOULD check the following information before the `policy_message` can be used as parameter of `Update`:
+
 1) Check if the `policy_token_id` is allocated in the contract `policy_contract_address`.
 2) Check if the `asset_contract_address` and `asset_token_id` is pointing to the `policy_token_id` within the policy `%asset_table`.
 3) Validate the content of the ODRL policy according to the specification given as a template.
@@ -241,73 +249,56 @@ In addition, the function SHOULD check the following information before the `pol
 
 #### Message Signing
 
-The encapsulation of the `policy_message` as a [`failing_noop (tag 17)`][24] is REQUIRED. This precaution prevents the signed message from being utilized for on-chain transactions. The feasibility of this process is largely contingent upon the support provided by various libraries and wallets, as exemplified [here][25].
+The encapsulation of the `policy_message` using [Of-Chain Message Signing][24] is REQUIRED. This precaution prevents the signed message from being utilized for on-chain transactions. The feasibility of this process is largely contingent upon the support provided by various libraries and wallets.
 
-OPTIONALLY, developers may choose to use `magic_byte: <0x04>`, which refers to an authenticated signing request in accordance with the [TZIP-26 proposal][23].
-
-##### Failing_noop:
-
-```
-{
-  branch: "BLockGenesisGenesisGenesisGenesisGenesisf79b5d1CoW2"
-  contents: [{
-    kind: 'failing_noop',
-    arbitrary: 'policy_message'
-   }]
-}
->> 0x038fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed8424c7ccd00b1100003238706f6c6963795f6d657373616765
-```
-
-The `failing_noop` operation is defined as follows:
-- `"magic_bytes": <0x03>`: Magic bytes (aka watermark) referring to a `Transfer` operation.
-- `"branch": <8fcf233671b6a04fcf679d2a381c2544ea6c1ea29ba6157776ed8424c7ccd00b>`: Contains the branch (genesis block).
-- `"tag": <11>`: Tag 17 referring to a `failing_noop` operation.
-- `"length": <00003238>`: Length of the following message in `bytes`.
-- `"message": <706f6c6963795f6d657373616765>`: The serialized `PolicyMessage` in `bytes` using `PACK`. (This example uses the string `"policy_message"`).
-
-##### Authenticated Signing Request:
+##### Off-chain message signing
 
 ```jsligo
-type magic_bytes = bytes;
+type magic_string = bytes;
+type interface = bytes;
+type character_encoding;
 type message = bytes; // serialized PolicyMessage with `PACK`
 
 type my_message = {
-  magic_bytes : magic_bytes;
+  magic_string : magic_string;
+  interface : interface;
+  character_encoding : character_encoding
   message : message;
 };
 
->> 0x04706f6c6963795f6d657373616765
+>> b"\x80tezos signed offchain messagedraft-policy-tokenization2706f6c6963795f6d657373616765"
 ```
 
 Defined as:
-- `"magic_bytes": <0x04>`: Magic bytes (aka watermark) referring to an `Authenticated signing request`.
-- `"message": <706f6c6963795f6d657373616765>`: The serialized `PolicyMessage` in `bytes` using `PACK`. (This example uses the string `"policy_message"`).
 
-It is RECOMMENDED to:
-- be aware of replay attacks as described [here][19].
-- to reserve a `magic_byte` specifically for a `"Policy signing request":<0x99>` as change request for the [TZIP-26 proposal][23]. This ensures the correct interpretation of the message structure of the serialized policy message using `PACK`.
-  > "I got 99 problems but my policy ain't one"
+- `"magic_bytes": <b"\x80tezos signed offchain message">`: Magic bytes (aka watermark) referring to `Off-Chain Message Signing`.
+- `"interface": <b"draft-policy-tokenization">`: Reference to this TZIP.
+- `"character_encoding": <2>`: Refer
+- `"message": <706f6c6963795f6d657373616765>`: The serialized `PolicyMessage` in `bytes` using `PACK`. (This example uses the string `"policy_message"`).
 
 ### Step 1: `Mint`
 
 The minting process reserves a policy token in the contract. This token MUST be used as the `"uid"<policy_contract_address:policy_token_id>` within the ODRL policy. Only the owner of the associated NFT asset is permitted to `Mint` the policy token.
 
-```
+```jsligo
 type Action = ["Mint" : string, policy_params : PolicyParams]
 ```
 
 A number of actions are RECOMMENDED:
+
 - Setting a moderate price of `%MINT_PRICE` to discourage the reservation of multiple empty policy tokens.
 - Initialize a list of allowed associated NFT asset contract addresses in `%allowed_assets` on origination.
 - Check if an entry for the asset NFT already exists in the `%asset_table`.
 
 Advantages:
+
 - The linking between entry points is completed.
 - Potential replay attacks are mitigated by checking if a big map item already exists.
 - It provides a straightforward way to check if a token has a policy.
 - It allows SIWT to combine token and policy requirements.
 
 Disadvantages:
+
 - The additional ledger introduces extra complexity.
 - Each asset can only be associated with a single policy.
 
@@ -341,7 +332,7 @@ The policy associated with a token is under the purview of the application's adm
 
 The following administrative actions are defined:
 
-```
+```jsligo
 type AdminActions =
  | ["Set_adminstrator": string, admin_uid : address]
  | ["Set_paused": string, is_paused : bool]
@@ -365,6 +356,7 @@ Token-specific metadata is stored/presented as a Michelson value of type `(map s
 Providing a value for `"decimals"` is required for all token types. `"name”` and `"symbol"` are not required but it is highly recommended for most tokens to provide the values either in the map or the JSON found via the TZIP-016 URI.
 
 A valid ODRL policy token MUST contain the following token metadata values:
+
 - `"policy"`: The ODRL [json-ld][16] policy.
 - `"signature"`: A signature of [type][20] serialized with [`PACK`][22].
 
@@ -384,16 +376,16 @@ A valid ODRL policy token MUST contain the following token metadata values:
 
 - If a policy has the `dc:isReplacedBy` property, then a processor MUST consider the first policy void and MUST retrieve and process the identified policy.
 
-
 #### Contract Metadata (TZIP-016)
+
 The general recommendations of TZIP-16 MUST be followed.
 
 ### FA2.1
 
 The [FA2.1][11] specification offers a significant extension to the policy token concept by incorporating the use of [Tickets][12]. This enables the direct maintenance of policies within a user's wallet, thereby promoting user-centric policy management. Additionally, the FA2.1 specification mandates the use of [Events][13] for tasks such as updating token metadata. This ensures a consistent audit trail of any policy changes made by the contract administrator or any authorized operator. Leveraging a FA2.1 compliant contract, which facilitates these advanced features, is RECOMMENDED for robust and user-friendly policy management.
 
-
 ## Use Cases
+
 Those are example use cases in order to understand the mechanism.
 
 ### Digital Art Ownership & Licensing
@@ -437,27 +429,30 @@ Those are example use cases in order to understand the mechanism.
 **Benefits/Outcomes:** In-game assets can be tokenized and associated with an ODRL policy defining the rights of the asset's owner. This setup facilitates a player-driven economy, enabling players to trade, sell, or rent their game assets securely.
 
 ## Implementations
+
 A reference implementation of a policy contract using the described metadata schema in combination with a [FA2][8] contract is implemented in the library [Sign in with Tezos][9].
 
 ## Future Directions
 
 1. `Update Verifier Public Key`: The inclusion of a mechanism to update the public key of the verifier should be considered. This mechanism might involve extending the entry points with a method specifically for updating the verifier key. Extra caution must be taken to ensure that the validation of a policy (using the signature and the raw bytes) can still be performed with a changed key, or potentially with a list of valid keys. An event mechanism to document changes to the verifier key is RECOMMENDED, and the ability to set a status for each verifier key may provide useful context about their usage state.
 
-   ```
+   ```jsligo
    type action = ["Set_verifier": string, verifier_uid : address, status : bool]
    ```
-2) `Multiple Policy Tokens for a Single NFT Asset`: Future work could explore the creation of a mechanism that allows for the association of multiple policy tokens with a single NFT asset.
-3) `View Definitions`: Defining views to access a policy and its verification status, as well as to access the list of verifiers and their respective statuses, would improve the transparency and accessibility of policy information.
-4) `Policy URI in Policy Token Metadata`: It is worth considering the addition of a `policy_uri` to the policy token metadata. This URI, which would comply with [TZIP-16][1], would point to the policy represented json-ld e.g. on IPFS.
-5) `Conceptualize Policy Evolution`: It is important to consider how policies might evolve or change over time. Developing a concept for how policy updates, revocations, and additions could be managed while maintaining the integrity of the policy token and the associated NFT asset, could provide a valuable solution to the dynamic nature of policy management.
-6) `Multiple Assets to one Policy`: It may be considered to allow multiple pairs of `asset_contract_address:asset_token_id` to point to a single policy.
-7) `Update allowed NFT asset contract addresses`: Add an entry point to update the `%allowed_assets` analogously to updating  `%pricing_table`:
 
-   ```
+2. `Multiple Policy Tokens for a Single NFT Asset`: Future work could explore the creation of a mechanism that allows for the association of multiple policy tokens with a single NFT asset.
+3. `View Definitions`: Defining views to access a policy and its verification status, as well as to access the list of verifiers and their respective statuses, would improve the transparency and accessibility of policy information.
+4. `Policy URI in Policy Token Metadata`: It is worth considering the addition of a `policy_uri` to the policy token metadata. This URI, which would comply with [TZIP-16][1], would point to the policy represented json-ld e.g. on IPFS.
+5. `Conceptualize Policy Evolution`: It is important to consider how policies might evolve or change over time. Developing a concept for how policy updates, revocations, and additions could be managed while maintaining the integrity of the policy token and the associated NFT asset, could provide a valuable solution to the dynamic nature of policy management.
+6. `Multiple Assets to one Policy`: It may be considered to allow multiple pairs of `asset_contract_address:asset_token_id` to point to a single policy.
+7. `Update allowed NFT asset contract addresses`: Add an entry point to update the `%allowed_assets` analogously to updating  `%pricing_table`:
+
+   ```jsligo
    type AdminAction = ["Update_allowed_assets": string, asset_uid : nat, is_valid : bool]
    ```
 
 ## Copyright
+
 This document is licensed under [MIT][10].
 
 [1]: https://gitlab.com/tzip/tzip/-/blob/master/proposals/tzip-16/tzip-16.md
@@ -475,13 +470,10 @@ This document is licensed under [MIT][10].
 [15]: https://www.mobility-data-space.de/en.html
 [16]: https://json-ld.org/
 [17]: https://ligolang.org/docs/language-basics/tezos-specific/?lang=jsligo#checking-signatures
-[18]: https://json-schema.org/understanding-json-schema/reference/string.html#resource-identifiers
 [19]: https://tezos.gitlab.io/developer/michelson_anti_patterns.html?highlight=signature#signatures-alone-do-not-prevent-replay-attacks
 [20]: https://ligolang.org/docs/language-basics/tezos-specific?lang=jsligo#checking-signatures
 [21]: https://www.w3.org/TR/odrl-model/#bib-dcterms
 [22]: https://ligolang.org/docs/language-basics/tezos-specific?lang=jsligo#pack-and-unpack
-[23]: https://gitlab.com/tezos/tzip/-/merge_requests/195
-[24]: http://doc.tzalpha.net/shell/p2p_api.html#failing-noop-tag-17
-[25]: https://github.com/ecadlabs/taquito/issues/2460
+[24]: tbd
 [26]: https://objkt.com/asset/KT1G5v7LfnZKRQhifjhdmusEKcVmupEhZ4F3/0
 [27]: https://www.ietf.org/rfc/rfc2119.txt

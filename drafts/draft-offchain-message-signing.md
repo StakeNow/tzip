@@ -40,8 +40,8 @@ The first byte is the `magic byte` used for domain separation within the Tezos e
 
 #### Interface
 
-The `interface` acts as a domain separator to tell a wallet or SDK developer how to distinguish different off-chain message types. The string MUST be encoded with the printable ASCII character set. This field MAY be displayed to the user. The interface MUST contain a reference to the specification defining the `message`. It is a [URI][] and RECOMMENDED yto be suffixed with the specifications `namespace` as uri fragment or OPTIONALLY with the name and number of the specification like e.g. `#TZIP-XY`.
-It is RECOMMENDED to host the specifications in order to facilitate easily human readable URIs as it is done for the Chain Agnostic Improvement Proposals (CAIPs). Tezos Improvement Proposals MAY use the following abbreviation `tzip://` as prefix with the TZIP number as suffix whereas it is REQUIRED to maintain the TZIP specification at `https://gitlab.com/tezos/tzip`. The `interface` string MUST NOT be empty.
+The `interface` acts as a domain separator to tell a wallet or SDK developer how to distinguish different off-chain message types. The string MUST be encoded with the printable ASCII character set. This field MAY be displayed to the user. The interface MUST contain a reference to the specification defining the `message`. It is a [URI][] and RECOMMENDED to be suffixed with the specifications `namespace` as URI fragment or OPTIONALLY with the name and number of the specification like e.g. `#TZIP-10`.
+It is RECOMMENDED to host the specifications under a dedicated domain in order to facilitate easily human readable URIs as it is done e.g. for the Chain Agnostic Improvement Proposals (CAIPs). Tezos Improvement Proposals MAY use the following abbreviation `tzip://` as prefix with the TZIP number as suffix whereas it is REQUIRED to maintain the TZIP specification at `https://gitlab.com/tezos/tzip`. The `interface` string MUST NOT be empty. The maximum length of the URI is `255` characters.
 
 ```text
 Examples:
@@ -53,7 +53,7 @@ tzip://78
 
 #### Character encoding
 
-There are different kinds of encodings available for a `message`. If encoding `Custom` is used then the `Interface` specification MUST include the type of encoding. In certain applications e.g. a [PACK encoding][] might be useful but this TZIP does only provide the basic options as application use cases are not foreseeable. If the encoding `Custom` is not supported then the dApp or wallet MUST display it as `hex string`.
+There are different kinds of encodings available for a `message`. If encoding `Custom` is used then the `Interface` specification MUST include the type of encoding. In certain applications e.g. a [PACK encoding][] might be useful but this TZIP does only provide the basic options as application use cases are not foreseeable. If the encoding `Custom` is not supported then the dApp or wallet MUST display it as hexadecimal `string`.
 
 | Id       | Encoding        | Hardware Wallet Support |
 | ---------|-----------------|-------------------------|
@@ -113,8 +113,8 @@ signature = edsigu6UNY8NP7eXEyGbszvugiDWxZiRbk18Qdvt78eQMZxo2oSXHf1bmWT5Xrdvq7e8
 
 ## References
 
-- [failing_noop (tag 17)][] - A possible solution to encode a signed message for off-chain usage.
-- [PACK encoding][] - An encoding used in LIGO.
+* [failing_noop (tag 17)][] - A possible solution to encode a signed message for off-chain usage.
+* [PACK encoding][] - An encoding used in LIGO.
 
 [RFC 2119]: https://www.ietf.org/rfc/rfc2119.txt
 [failing_noop (tag 17)]: http://doc.tzalpha.net/shell/p2p_api.html#failing-noop-tag-17
@@ -122,7 +122,7 @@ signature = edsigu6UNY8NP7eXEyGbszvugiDWxZiRbk18Qdvt78eQMZxo2oSXHf1bmWT5Xrdvq7e8
 [URI]: https://datatracker.ietf.org/doc/html/rfc3986
 [CAIP-122]: https://chainagnostic.org/CAIPs/caip-122
 [PACK encoding]: https://ligolang.org/docs/language-basics/tezos-specific?lang=jsligo#pack-and-unpack
-[draft-signer-requests]: URI
+[draft-signer-requests]: tbd
 
 ## Copyright
 

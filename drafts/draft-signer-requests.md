@@ -86,6 +86,7 @@ In order to reserve a new byte the completion of the following workflow is REQUI
 The `table of reserved bytes` is only allowed to be extended. Previously used magic bytes MUST NOT be reused as it breaks backwards compatibility. If a message type is not used anymore it SHALL be marked with the Status `revoked`. The range reserved by the protocol MAY have breaking changes due to protocol upgrades governed by the Tezos community. Changes SHALL be documented in this TZIP as soon as possible. Normally a version number in the TZIP is only used for drafts. As this TZIP is designed to evolve the version SHALL be used to indicate an extension of the `table of reserved bytes`.
 
 ## References
+
 - [octez-signer magic bytes][] - The list of currently maintained magic bytes by Octez.
 - [beacon-sdk][] - A software develop kit to communicate between wallets and dapps.
 - [Smart Rollups][] - Documentation to Smart Rollups in Octez.

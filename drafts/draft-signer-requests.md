@@ -6,7 +6,6 @@ author: Carlo van Driesten <carlo.van-driesten@vdl.digital>, Marigold <contact@m
 type: I
 created: 2022-09-20
 date: 2024-02-21
-requires: ["TZIP-10"]
 version: 1
 ---
 

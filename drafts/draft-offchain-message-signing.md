@@ -93,22 +93,22 @@ A dApp or wallet provider MUST fall back to the default `interface: tzip://tbd` 
 ### Encoding & signing
 
 ```
-message = "Hello world! @ block 3961750"
+message = "Hello world!"
 
-domain_seperator = "My Test dApp | Ghostnet"
+interface = "tzip://tbd"
 
 =>
 
-bytes = 0x8074657a6f73207369676e6564206f6666636861696e206d657373616765011774657a6f73207369676e6564206f6666636861696e206d657373616765011c48656c6c6f20776f726c6421204020626c6f636b2033393631373530
+bytes = 0x8074657a6f73207369676e6564206f6666636861696e206d6573736167650a747a69703a2f2f74626400000c48656c6c6f20776f726c6421
 
 # Wallet
 mnemonic = "all all all all all all all all all all all all"
 derivation_path = m/44'/1729'/0'/0' (slip-10)
-private_key = edskRgEboayXzSZHW5wK2beB4aZtfQtuc2ywwjPmSQYCg7unpVT2Sr1KUSzX9hNLJC25YcB4qZ1Wotu6EuDveWY
+private_key = edskRgEboayXzSZHW5wK2beB4aZtfQtuc2ywwjPmSQYCg7unpVT2Sr1KUSzX9hNLJC25YcB4qZ1Wotu6EuDveWY4jkiKQr9H3k
 
 =>
 
-signature = edsigu6UNY8NP7eXEyGbszvugiDWxZiRbk18Qdvt78eQMZxo2oSXHf1bmWT5Xrdvq7e8pw9tubUX1hWtBcphjk9yiJe4k3P3F4t
+signature = edsigtvazvxVHsofbakqvqHtQGiYZBxNg8hfY45escmFpLTYeBjjBFUTt254UARm93qHpbQugGU5fmJWdf3Cm5FNMcP7oYPsa7c
 ```
 
 ## References

@@ -9,6 +9,7 @@ date: To be determined
 requires: ["draft-signer-requests"]
 ---
 
+
 ## Abstract
 
 There is no formal message signing standard for Tezos yet. Message signing has many use cases. It can for example be used for code signing, so that authenticity and integrity can be validated. Right now decentralized applications (dApps) and wallets are relying on an informal way of doing message signing by using Michelson data (magic byte `0x05`), something it was never intended for. In addition the [failing_noop (tag 17)][] was not adopted for the use of off-chain messages due to the lack of documentation. This TZIP aims to solve that problem and defines a standard that is simple, secure, extendable and compatible with hardware wallets.

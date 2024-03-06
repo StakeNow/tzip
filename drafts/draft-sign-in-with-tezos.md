@@ -251,6 +251,19 @@ This specification defines the following SIWT Message fields that can be parsed 
 - `request-id` OPTIONAL. A system-specific identifier that MAY be used to uniquely refer to the sign-in request.
 - `resources` OPTIONAL. A list of information or references to information the user wishes to have resolved as part of authentication by the relying party. Every resource MUST be an RFC 3986 URI separated by `"\n- "` where `\n` is the byte `0x0a`.
 
+#### Valid message examples
+
+Example message string including all optional fields:
+```
+'SIWT wants you to sign in with your Tezos account:\ntz1TzrmTBSuiVHV2VfMnGRMYvTEPCP42oSM8\n\nadsf\n\nUri: https://siwt.xyz\nVersion: 1\nChain ID: NetXdQprcVkpaWU\nNonce: 12345678\nIssued At: 2021-08-25T12:34:56Z\nExpiration Time: 2021-08-25T12:34:56Z\nNot Before: 2021-08-25T12:34:56Z\nRequest ID: 123456789\nResources:\n- https://a.com\n- https://b.com'
+```
+
+Example message string with only mandatory fields:
+```
+SIWT wants you to sign in with your Tezos account:\ntz1TzrmTBSuiVHV2VfMnGRMYvTEPCP42oSM8\n\n\n\nUri: https://siwt.xyz\nVersion: 1\nChain ID: NetXdQprcVkpaWU\nNonce: 12345678\nIssued At: 2021-08-25T12:34:56Z
+```
+
+
 ## Backwards compatibility
 
 The data model of the message MUST be derived from the `interface` referencing to the SIWT specification in the [offchain-message-signing][] TZIP. Different versions MAY have breaking changes.

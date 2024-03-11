@@ -282,24 +282,7 @@ SIWT wants you to sign in with your Tezos account:\ntz1TzrmTBSuiVHV2VfMnGRMYvTEP
 
 ### Encoding & signing
 
-```text
-message = "Hello world!"
-
-interface = "tzip://tbd"
-
-=>
-
-bytes = 0x8074657a6f73207369676e6564206f6666636861696e206d6573736167650a747a69703a2f2f74626400000c48656c6c6f20776f726c6421
-
-# Wallet
-mnemonic = "all all all all all all all all all all all all"
-derivation_path = m/44'/1729'/0'/0' (slip-10)
-private_key = edskRgEboayXzSZHW5wK2beB4aZtfQtuc2ywwjPmSQYCg7unpVT2Sr1KUSzX9hNLJC25YcB4qZ1Wotu6EuDveWY4jkiKQr9H3k
-
-=>
-
-signature = edsigtvazvxVHsofbakqvqHtQGiYZBxNg8hfY45escmFpLTYeBjjBFUTt254UARm93qHpbQugGU5fmJWdf3Cm5FNMcP7oYPsa7c
-```
+tbd
 
 ## References
 

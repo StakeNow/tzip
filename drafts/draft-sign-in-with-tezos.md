@@ -22,6 +22,8 @@ Sign-In with Tezos describes how Tezos accounts authenticate with off-chain serv
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119][].
 
+**Printable ASCII:** ASCII characters between 32 and 126 (inclusive).
+
 ### Workflow
 
 Sign-In with Tezos (SIWT) works as follows:

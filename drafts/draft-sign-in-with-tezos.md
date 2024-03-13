@@ -4,9 +4,9 @@ title: Sign-In with Tezos
 status: Draft
 author: Carlo van Driesten <carlo.van-driesten@vdl.digital>, Klas Harrysson <klas@kukai.app>
 type: I
-created: 2024-03-25
-date: To be determined
-requires: ["draft-offchain-message-signing", "TEZOS-CAIP-122"]
+created: 2024-03-05
+date: 2024-03-13
+requires: ["TZIP-32", "TEZOS-CAIP-122"]
 ---
 
 
@@ -26,10 +26,11 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 Sign-In with Tezos (SIWT) works as follows:
 
-1. The relying party generates a SIWT Message and encodes the SIWT Message as a Tezos off-chain message as defined in TZIP [offchain-message-signing][].
-2. The wallet presents the user with a structured plaintext message or equivalent interface for signing the SIWT Message with the [offchain-message-signing][] data format.
-3. The signature is then presented to the relying party, which checks the signature’s validity and SIWT Message content.
-4. The relying party might further fetch data associated with the Tezos account ID [CAIP-10][], such as from the Tezos blockchain (e.g. account balances, public key revelation, FA2 asset ownership like [Tezos Domains][]), or other data sources that might or might not be permissioned.
+1. The relying party SHALL generate a SIWT Message. It is RECOMMENDED to encode the SIWT Message as a Tezos off-chain message as defined in TZIP [offchain-message-signing][].
+2. The user SHALL present the public key to the relying party. It is RECOMMENDED to use a [TZIP-10][] compliant handshake procedure or OPTIONALLY to use Tezos on-chain data to retrieve the public key corresponding to the public key hash.
+3. The wallet SHALL present the user with a structured plaintext message or OPTIONALLY an equivalent interface for signing the encoded SIWT Message.
+4. The signature is presented to the relying party, which MUST check the signature’s validity and SIWT Message content.
+5. The relying party MAY further fetch data associated with the Tezos account ID [CAIP-10][], such as from the Tezos blockchain (e.g. account balances, public key revelation, FA2 asset ownership like [Tezos Domains][]), or other data sources that might or might not be permissioned.
 
 ### CAIP-122
 
@@ -253,7 +254,7 @@ This specification defines the following SIWT Message fields that can be parsed 
 
 ## Backwards compatibility
 
-The data model of the message MUST be derived from the `interface` referencing to the SIWT specification in the [offchain-message-signing][] TZIP. Different versions MAY have breaking changes.
+The data model of the message MUST be derived from the SIWT specification referenced in the `interface` according to the [offchain-message-signing][] encoding. Different versions of SIWT MAY have breaking changes.
 
 ## Reference implementation
 
@@ -271,12 +272,14 @@ A reference implementation can be found in the [SIWT library][].
 ### Valid message examples
 
 Example message string including all optional fields:
-```
+
+```text
 'SIWT wants you to sign in with your Tezos account:\ntz1TzrmTBSuiVHV2VfMnGRMYvTEPCP42oSM8\n\nadsf\n\nUri: https://siwt.xyz\nVersion: 1\nChain ID: NetXdQprcVkpaWU\nNonce: 12345678\nIssued At: 2021-08-25T12:34:56Z\nExpiration Time: 2021-08-25T12:34:56Z\nNot Before: 2021-08-25T12:34:56Z\nRequest ID: 123456789\nResources:\n- https://a.com\n- https://b.com'
 ```
 
 Example message string with only mandatory fields:
-```
+
+```text
 SIWT wants you to sign in with your Tezos account:\ntz1TzrmTBSuiVHV2VfMnGRMYvTEPCP42oSM8\n\n\n\nUri: https://siwt.xyz\nVersion: 1\nChain ID: NetXdQprcVkpaWU\nNonce: 12345678\nIssued At: 2021-08-25T12:34:56Z
 ```
 
@@ -304,6 +307,7 @@ tbd
 [Tezos Domains]: https://tezos.domains/
 [SIWT library]: https://siwt.xyz/
 [offchain-message-signing]: tbd
+[TZIP-10]: https://gitlab.com/tezos/tzip/-/blob/57c32be0e5d4bc6867cea83a12cf909894c42c41/proposals/tzip-10/tzip-10.md
 
 ## Copyright
 

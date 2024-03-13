@@ -1,5 +1,5 @@
 ---
-tzip: tbd
+tzip: 031
 title: Signer Requests
 status: Draft
 author: Carlo van Driesten <carlo.van-driesten@vdl.digital>, Marigold <contact@marigold.dev>

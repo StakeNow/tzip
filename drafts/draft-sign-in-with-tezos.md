@@ -28,7 +28,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 Sign-In with Tezos (SIWT) works as follows:
 
-1. The relying party SHALL generate a SIWT Message. It is RECOMMENDED to encode the SIWT Message as a Tezos off-chain message as defined in TZIP [offchain-message-signing][].
+1. The relying party SHALL generate a SIWT Message. It is RECOMMENDED to encode the SIWT Message as a Tezos off-chain message as defined in TZIP [offchain-message-signing][]. You MAY use the [taquito][] convention of signing messages with beacon.
 2. The user SHALL present the public key to the relying party. It is RECOMMENDED to use a [TZIP-10][] compliant handshake procedure or OPTIONALLY to use Tezos on-chain data to retrieve the public key corresponding to the public key hash.
 3. The wallet SHALL present the user with a structured plaintext message or OPTIONALLY an equivalent interface for signing the encoded SIWT Message.
 4. The signature is presented to the relying party, which MUST check the signature’s validity and SIWT Message content.
@@ -310,6 +310,7 @@ tbd
 [SIWT library]: https://siwt.xyz/
 [offchain-message-signing]: tbd
 [TZIP-10]: https://gitlab.com/tezos/tzip/-/blob/57c32be0e5d4bc6867cea83a12cf909894c42c41/proposals/tzip-10/tzip-10.md
+[taquito]: https://tezostaquito.io/docs/signing/#generating-a-signature-with-beacon-sdk
 
 ## Copyright
 

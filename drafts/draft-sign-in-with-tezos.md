@@ -273,13 +273,13 @@ A reference implementation can be found in the [SIWT library][].
 
 ### Valid message examples
 
-Example message string including all optional fields:
+1) Example message string including all optional fields:
 
 ```text
 'SIWT wants you to sign in with your Tezos account:\ntz1TzrmTBSuiVHV2VfMnGRMYvTEPCP42oSM8\n\nadsf\n\nUri: https://siwt.xyz\nVersion: 1\nChain ID: NetXdQprcVkpaWU\nNonce: 12345678\nIssued At: 2021-08-25T12:34:56Z\nExpiration Time: 2021-08-25T12:34:56Z\nNot Before: 2021-08-25T12:34:56Z\nRequest ID: 123456789\nResources:\n- https://a.com\n- https://b.com'
 ```
 
-Example message string with only mandatory fields:
+2) Example message string with only mandatory fields:
 
 ```text
 SIWT wants you to sign in with your Tezos account:\ntz1TzrmTBSuiVHV2VfMnGRMYvTEPCP42oSM8\n\n\n\nUri: https://siwt.xyz\nVersion: 1\nChain ID: NetXdQprcVkpaWU\nNonce: 12345678\nIssued At: 2021-08-25T12:34:56Z
@@ -287,7 +287,29 @@ SIWT wants you to sign in with your Tezos account:\ntz1TzrmTBSuiVHV2VfMnGRMYvTEP
 
 ### Encoding & signing
 
-tbd
+| Message substring  | Value                         | Hex value                                                  |
+| -------------------|-------------------------------|------------------------------------------------------------|
+| Prefix             | Hexadecimal                   | 0x                                                         |
+| Magic byte         | 128                           | 80                                                         |
+| Magic string       | tezos signed offchain message | 74657A6F73207369676E6564206F6666636861696E206D657373616765 |
+| Interface length   | 9                             | 09                                                         |
+| Interface          | tzip://33                     | 747A69703A2F2F3333                                         |
+| Encoding           | ASCII                         | 00                                                         |
+| Message length     | 206                           | 00ce                                                       |
+| Message            | Example message string 2)     | 534957542077616E747320796F7520746F207369676E20696E207769746820796F75722054657A6F73206163636F756E743A5C6E747A31547A726D54425375695648563256664D6E47524D5976544550435034326F534D385C6E5C6E5C6E5C6E5572693A2068747470733A2F2F736977742E78797A5C6E56657273696F6E3A20315C6E436861696E2049443A204E6574586451707263566B706157555C6E4E6F6E63653A2031323334353637385C6E4973737565642041743A20323032312D30382D32355431323A33343A35365A |
+
+```text
+# Wallet
+mnemonic = "all all all all all all all all all all all all"
+derivation_path = m/44'/1729'/0'/0' (slip-10)
+private_key = edskRgEboayXzSZHW5wK2beB4aZtfQtuc2ywwjPmSQYCg7unpVT2Sr1KUSzX9hNLJC25YcB4qZ1Wotu6EuDveWY4jkiKQr9H3k
+
+bytes     = 0x8074657A6F73207369676E6564206F6666636861696E206D65737361676509747A69703A2F2F33330000ce534957542077616E747320796F7520746F207369676E20696E207769746820796F75722054657A6F73206163636F756E743A5C6E747A31547A726D54425375695648563256664D6E47524D5976544550435034326F534D385C6E5C6E5C6E5C6E5572693A2068747470733A2F2F736977742E78797A5C6E56657273696F6E3A20315C6E436861696E2049443A204E6574586451707263566B706157555C6E4E6F6E63653A2031323334353637385C6E4973737565642041743A20323032312D30382D32355431323A33343A35365A',
+sig       = 'sigdiZ7CJsFQDqaXJ54rm4HiiarRigeFL1FStqkmiNgD86Sgj7aSQo4neF1SnhjHzwc3KU5QfdT9ToKz7yivvhn7GaqBuPL1',
+prefixSig = 'edsigtoY2EFXmXLQsdiHNCtcFF216dFocctCbd8eaV7iMgZ93kWfi5LKt9qtA43QVpmBJ3ao5zvSzHmRa4nABP5GfyALghfHY16',
+sbytes    = '0x8074657A6F73207369676E6564206F6666636861696E206D65737361676509747A69703A2F2F33330000ce534957542077616E747320796F7520746F207369676E20696E207769746820796F75722054657A6F73206163636F756E743A5C6E747A31547A726D54425375695648563256664D6E47524D5976544550435034326F534D385C6E5C6E5C6E5C6E5572693A2068747470733A2F2F736977742E78797A5C6E56657273696F6E3A20315C6E436861696E2049443A204E6574586451707263566B706157555C6E4E6F6E63653A2031323334353637385C6E4973737565642041743A20323032312D30382D32355431323A33343A35365A783920d411a73ad4c493ab98070a904d237b3e79fb2277a1dae82cc6e992d968c7e56c2e80865c333f940bcbb93572a86f5ff0aa3f12c8fe3a08682f5660c902'
+
+```
 
 ## References
 

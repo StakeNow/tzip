@@ -93,7 +93,7 @@ A dApp or wallet provider MUST fall back to the default `interface: tzip://tbd` 
 
 ### Encoding & signing
 
-```
+```text
 message = "Hello world!"
 
 interface = "tzip://tbd"

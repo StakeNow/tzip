@@ -6,7 +6,7 @@ author: Carlo van Driesten <carlo.van-driesten@vdl.digital>, Roy Scheeren <roy.s
 type: LA
 created: 2023-06-19
 date: 2024-02-29
-requires: ["draf-offchain-message-signing"]
+requires: ["TZIP-32"]
 ---
 
 

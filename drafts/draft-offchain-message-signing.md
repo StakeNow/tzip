@@ -1,13 +1,14 @@
 ---
-tzip: tbd
+tzip: 032
 title: Off-Chain Message Signing
 status: Draft
 author: Klas Harrysson <klas@kukai.app>, Carlo van Driesten <carlo.van-driesten@vdl.digital>
 type: I
 created: 2024-02-21
-date: To be determined
-requires: ["draft-signer-requests"]
+date: 2024-03-05
+requires: ["TZIP-31"]
 ---
+
 
 ## Abstract
 
@@ -92,7 +93,7 @@ A dApp or wallet provider MUST fall back to the default `interface: tzip://tbd` 
 
 ### Encoding & signing
 
-```
+```text
 message = "Hello world!"
 
 interface = "tzip://tbd"
